@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpha Igniter</title>
+  <link rel="icon" type="image/png" href="assets/favicon-2.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @font-face {
+      font-family: 'Tomorrow';
+      src: url('assets/Tomorrow-Regular.f73b893ce0687684ef1d293.19c63e19ae4dabeefaf62961ace83cfb.ttf');
+    }
+
+    
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Tomorrow', sans-serif;
+      scroll-behavior: smooth;
+      /* background-color: black; */
+      color: white;
+    }
+
+    h1, h2, a {
+      font-family: 'Tomorrow', sans-serif;
+    }
+
+    h3, span {
+      font-family: 'Tomorrow', sans-serif;
+    }
+
+    p {
+      font-family: 'Tomorrow', sans-serif;
+      line-height: 25px !important;
+    }
+
+    td {
+      font-family: 'Tomorrow', sans-serif;
+      font-size: 20px;
+    }
+
+    .running-text {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #9c5d11;
+      overflow: hidden;
+      white-space: nowrap;
+      z-index: 9999;
+    }
+
+    .running-text span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 20s linear infinite;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 40px;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    section {
+      width: 100%;
+      height: 3280px;
+      background-size: cover;
+      background-position: top center;
+      display: flex;
+      justify-content: start;
+      align-items: start;
+      flex-direction: column;
+      text-align: center;
+      /* padding: 50px 20px 40px; */
+    }
+
+    .section-video {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: start;
+      align-content: start;
+      padding-top: 10px;
+    }
+
+    .section-video video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      /* height: 100%; */
+      object-fit: contain;
+      z-index: -1;
+    }
+
+    .video-1 video{
+      position: relative;
+    }
+
+    .ggez {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      /* height: 100%; */
+      object-fit: contain;
+      z-index: 2;
+    }
+
+    .section-video .overlay {
+      z-index: 2;
+    }
+
+    .section-video h1 {
+      font-size: 64px;
+      /* margin-top: 100px; */
+    }
+
+    .section-video p {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .search-bar {
+      margin-top: 30px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      width: 300px;
+      border: none;
+      color: black;
+      font-size: 16px;
+    }
+
+    .portfolio-section {
+      background-image: url('assets/7.png');
+      background-size: cover;
+      background-position: center;
+      padding: 20px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .portfolio-title {
+      font-size: 36px;
+      margin-bottom: 50px;
+      font-weight: bold;
+    }
+
+    .household-section {
+        background-color: rgba(255, 255, 255, 0.3);
+        padding: 2rem;
+        border-radius: 10px;
+    }
+
+    .portfolio-top {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+      background-color: rgba(255, 255, 255, 0.3);
+      padding: 2rem;
+      border-radius: 10px;
+    }
+
+    .portfolio-box {
+      background: #0e0e0e;
+      border-radius: 16px;
+      padding: 30px 50px;
+      min-width: 250px;
+    }
+
+    .portfolio-box h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #aaa;
+    }
+
+    .portfolio-box p {
+      font-size: 40px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .stats-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: start;
+    }
+
+    .household-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .stat-box {
+      background: #0e0e0e;
+      padding: 20px 30px;
+      border-radius: 12px;
+      min-width: 220px;
+      text-align: left;
+    }
+
+    .stat-box h5 {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    .stat-box p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffc107;
+    }
+
+    .stat-box.small p {
+      font-size: 16px;
+      color: white;
+    }
+
+    .stat-box-liq {
+        padding: 20px 30px;
+        border-radius: 12px;
+        min-width: 220px;
+        text-align: left;
+        background-color: white;
+        margin-top: 20px;
+    }
+
+    .stat-box-liq h5 {
+      font-size: 14px;
+      color: black;
+      margin-bottom: 8px;
+    }
+
+    .stat-box-liq p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffb431;
+    }
+
+    .footer {
+      background-color: transparent;
+      padding: 40px 20px;
+      text-align: center;
+      color: black;
+      margin-top: 0;
+      position: absolute;
+      bottom: 0;
+    }
+
+    .footer-icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 20px;
+      color: black;
+    }
+
+    .footer-icons a {
+      color: black !important;
+      font-size: 28px;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .footer-icons svg {
+      color: black !important;
+    }
+
+    .footer-icons a:hover {
+      color: black;
+      transform: scale(1.2);
+    }
+
+    .footer-text {
+      font-size: 24px;
+      color: white;
+    }
+
+    .social-icons {
+      position: fixed;
+      top: 30%;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 999;
+    }
+
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-circle {
+      width: 56px;
+      height: 56px;
+      background: #f7be1c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-circle svg {
+      color: black;
+    }
+
+    .icon-circle img {
+      width: 35px;
+      height: auto;
+    }
+
+    .icon-wrapper:hover .icon-circle {
+      transform: scale(1.2);
+      background: rgb(132, 132, 132);
+    }
+
+    .icon-wrapper:hover .icon-circle svg,
+    .icon-wrapper:hover .icon-circle img {
+      color: white;
+      filter: invert(1);
+    }
+
+    .icon-circle-bottom {
+      width: 56px;
+      height: 56px;
+      background: #ffb431;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-circle-bottom svg {
+      color: white;
+    }
+
+    .icon-circle-bottom img {
+      width: 35px;
+      height: auto;
+    }
+
+    .icon-wrapper:hover .icon-circle-bottom {
+      transform: scale(1.2);
+      background: rgb(132, 132, 132);
+    }
+
+    .icon-wrapper:hover .icon-circle-bottom svg,
+    .icon-wrapper:hover .icon-circle-bottom img {
+      color: white;
+      filter: invert(1);
+    }
+
+    .text-box {
+        background-color: white; /* box background */
+        color: black; /* text color */
+        padding: 5px; /* space inside box */
+        border: 2px solid black; /* border thickness and color */
+        border-radius: 10px; /* rounded corners */
+        width: 1000px; /* fit to text size */
+        margin: 20px auto; /* center it */
+        font-size: 200px; /* text size */
+    }
+
+    .neon-text {
+      color: #ffffff;
+
+      /* ★ Neon effect */
+      text-shadow:
+        0 0 5px rgba(255, 255, 255, 0.678)
+    }
+
+    .neon-text-green {
+      color: #92FCCF;
+
+      /* ★ Neon effect */
+      text-shadow:
+        0 0 5px #92fcd0d4;
+    }
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 100%;
+      align-items: center;
+      align-content: center;
+      font-size: 20px;
+      padding: 0.5rem;
+    }
+
+    .header a{
+      cursor: pointer;
+      color: white;
+      text-decoration: none;
+    }
+
+    .header a:hover {
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.865)
+    }
+
+    .sosmed-section {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 150px;
+      margin-top: 30px;
+      width: 40%;
+    }
+
+    .sosmed-section-icon {
+      padding: 0.8rem;
+      background-color: black;
+      border-radius: 50%;
+    }
+
+    .sosmed-section-icon:hover{
+      opacity: 50%;
+      text-shadow:
+        0 0 100px rgba(255, 255, 255, 0.865)
+    }
+
+    .sosmed-footer {
+      padding: 0.2rem;
+      background-color: black;
+      border-radius: 50%;
+    }
+
+    .sosmed-footer:hover{
+      opacity: 50%;
+      text-shadow:
+        0 0 100px rgba(255, 255, 255, 0.865)
+    }
+
+    .example-copy {
+      width: min(900px, 100%);
+      margin-top: 24px;
+      padding: 24px;
+      border: 1px solid #1df2d3;
+      background: rgba(0, 0, 0, 0.72);
+      text-align: left;
+    }
+
+    .example-copy h2 {
+      margin: 24px 0 12px;
+      color: #ffffff;
+      font-size: 34px;
+    }
+
+    .example-copy h3 {
+      margin: 24px 0 12px;
+      color: #9dfb3e;
+      font-size: 28px;
+    }
+
+    .example-copy p {
+      margin: 0 0 16px;
+      color: #d8fef9;
+      font-size: 18px;
+    }
+
+    .example-copy ol {
+      margin: 0;
+      padding-left: 24px;
+    }
+
+    .example-copy li {
+      margin-bottom: 18px;
+      color: #d8fef9;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .example-copy strong {
+      color: #ffffff;
+    }
+
+    .example-copy .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #1df2d3;
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .example-copy .cta-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 12px 20px;
+      border: 1px solid #1df2d3;
+      color: #ffffff;
+    }
+
+    .leaflet-map-block {
+      position: absolute;
+      left: 0;
+      top: 1400px;
+      width: 500px;
+      height: 340px;
+      overflow: hidden;
+      border: 1px solid #1df2d3;
+      background: rgba(4, 12, 16, 0.92);
+      box-shadow: 0 0 28px rgba(29, 242, 211, 0.12);
+    }
+
+    .leaflet-map-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(29, 242, 211, 0.3);
+      color: #d8fef9;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .leaflet-map-title span:last-child {
+      color: #1df2d3;
+    }
+
+    .leaflet-shell {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      background: #08141a;
+    }
+
+    #war-drone-map {
+      width: 100%;
+      height: 100%;
+      background: #08141a;
+    }
+
+    .drone-red {
+      width: 12px;
+      height: 12px;
+      background: red;
+      border-radius: 50%;
+      box-shadow: 0 0 12px red;
+      animation: blink 0.35s infinite;
+    }
+
+    .drone-blue {
+      width: 12px;
+      height: 12px;
+      background: #00aaff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #00aaff;
+      animation: blink 0.35s infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .explosion-core {
+      width: 16px;
+      height: 16px;
+      background: yellow;
+      border-radius: 50%;
+      box-shadow: 0 0 30px orange, 0 0 60px red;
+      animation: explodeCore 0.8s forwards;
+    }
+
+    .explosion-ring {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 3px solid orange;
+      border-radius: 50%;
+      animation: explodeRing 1s forwards;
+    }
+
+    .explosion-spark {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: orange;
+      border-radius: 50%;
+      animation: spark 1s forwards;
+    }
+
+    @keyframes explodeCore {
+      0% { transform: scale(0.4); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+
+    @keyframes explodeRing {
+      0% { transform: scale(0.2); opacity: 1; }
+      100% { transform: scale(7); opacity: 0; }
+    }
+
+    @keyframes spark {
+      0% { transform: translate(0, 0); opacity: 1; }
+      100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+    }
+
+    .country {
+      color: white;
+      font-size: 13px;
+      font-weight: bold;
+      text-shadow: 0 0 6px black;
+      font-family: 'Tomorrow', sans-serif;
+    }
+
+  </style>
+</head>
+<body style="display: flex;flex-direction: column;justify-content: center;width: 100%;align-items: center;align-content: center;background-color: black;">
+    <section class="section-video" style="width: 1400px;">
+      <video autoplay muted loop>
+        <source src="assets/bg.mp4" type="video/mp4">
+      </video>
+      <div style="display: flex;flex-direction: row;justify-content: space-around;position: absolute;width: 100%;">
+        <div style="margin-top:10px;width: 10%;display: flex;flex-direction: row;justify-content: center;align-items: center;align-content: center;">
+          <img src="assets/favicon.png" width="50" alt="War Drone Logo"/>
+        </div>
+        <div class="header">
+          <a>WHITEPAPER</a>
+          <a>TOKEN INFO</a>
+          <a>UTILITY</a>
+          <a>SPOTLIGHT</a>
+          <a href="app/">JOIN NOW</a>
+        </div>
+      </div>
+      
+      
+      <div style="display: flex;flex-direction: column;justify-content: space-between;height: 100%;padding: 1rem;margin-top: 500px;align-items: center;width: 100%;">
+        <div style="display: flex;flex-direction: column;justify-content: center;align-items: center;align-content: center;">
+          <span class="eyebrow" style="font-size: 45px;">welcome to wardrone.</span>
+          <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;align-content: center;margin-top: 100px;margin-right: 110px;gap: 30px;">
+            <h2 style="font-size: 64px;">WAR DRONE</h2>
+            <span style="font-size: 24px;">WAR DRONE - The Era of Autonomous Strike Systems</span>
+          </div>
+          <div style="display: flex;flex-direction: column;width: 600px;justify-content: start;align-items: start;align-content: start;text-align: start;margin-left: 350px;margin-top: 20px;">
+            <div>
+              <p>In modern warfare, unmanned aerial vehicles (UAVs) have transformed the way military operations are conducted.</p>
+              <p>Originally developed for reconnaissance and surveillance, drones have evolved into Unmanned Combat Aerial Vehicles (UCAVs) capable of carrying out precision strikes without a pilot on board.</p>
+              <p>Across modern conflicts, including tensions involving the United States, Israel, and Iran, combat drones have become a central element of military strategy. These systems are capable of flying long distances, identifying targets, and delivering precision attacks with minimal risk to personnel.</p>
+              <p>Platforms such as long-range strike drones and loitering munitions demonstrate how autonomous systems are redefining the battlefield.</p>
+              <p>$WARDRONE draws inspiration from this technological transformation.</p>
+              <p>Built on the Solana blockchain, DRONE reflects the rise of autonomous systems, advanced aerospace engineering, and the growing influence of unmanned technologies in the modern world.</p>
+            </div>
+            <div style="margin-top: 70px;font-size: 50px;">
+              <h3>What is $WARDRONE</h3>
+            </div>
+            <div style="margin-top: 50px;">
+              <p style="font-size: 20px;">$WARDRONE is a digital asset inspired by the rapid advancement of unmanned combat aerial vehicles and the role they play in modern military technology.</p>
+              <p style="font-size: 20px;margin-top: 25px;">Combat drones represent a new generation of aerospace systems capable of executing complex missions with precision and efficiency.</p>
+              <p style="font-size: 20px;margin-top: 25px;">The WAR DRONE project symbolizes this evolution of technology, where automation, intelligence systems, and advanced engineering redefine strategic capabilities.</p>
+              <p style="font-size: 20px;margin-top: 25px;">Built on Solana, $WAR DRONE represents the intersection of technological innovation and decentralized digital infrastructure.</p>
+              <p style="font-size: 20px;margin-top: 25px;">While it does not represent physical drone systems, it reflects the technological era shaped by autonomous aerial platforms.</p>
+            </div>
+          </div>
+          <div style="font-size: 60px;margin-top: 25px;margin-right: 50px;">
+            <h3>How to Buy</h3>
+            <div style="width: 400px;line-height: 10px;margin-top: 30px;">
+              <span style="font-size: 20px;color: black;">
+                <strong>1 - Prepare Your Wallet</strong><br>Install a Solana wallet such as Phantom or
+                Solflare and fund it with SOL to enable
+                transactions on the network.
+              </span>
+              <div style="margin-top: 160px;">
+                <a href="#" style="color: white;">
+                  <span style="font-size: 36px;color: white;">
+                    Get Phantom Wallet
+                  </span>
+                </a>
+              </div>
+              <div style="margin-top: 60px;">
+                <span style="font-size: 20px;color: white;">
+                  <strong>2 - Access the Trading Platform</strong><br>Open Jupiter or another Solana decentralized exchange and search for the official $DRONE trading pair.
+                </span>
+              </div>
+              <div style="margin-top: 60px;">
+                <span style="font-size: 20px;color: white;">
+                  <strong>3 - Acquire WAR DRONE</strong><br>Swap your SOL for $WAR DRONE using the verified contract address and participate in the evolving ecosystem of digital assets.
+                </span>
+              </div>
+            </div>
+            <div style="margin-top: 50px;">
+              <a class="cta-link" style="font-size: 32px;color: white;" href="#">Buy $WAR DRONE</a>
+            </div>
+            <div style="margin-top: 255px;margin-left: 50px;">
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;align-content: center;gap: 120px;">
+                <a href="#">
+                  <div style="width: 50px;height: 50px;">
+                  </div>
+                </a>
+                <a href="#">
+                  <div style="width: 50px;height: 50px;">
+                  </div>
+                </a>
+                <a href="#">
+                  <div style="width: 50px;height: 50px;">
+                  </div>
+                </a>
+              </div>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;align-content: center;gap: 190px;margin-top: 30px;">
+                <a href="#">
+                  <div style="width: 50px;height: 50px;">
+                  </div>
+                </a>
+                <a href="#">
+                  <div style="width: 50px;height: 50px;">
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div style="margin-left: 60px;">
+              <p style="margin-top:16px;font-size: 28px;">Live on Solana</p>
+            </div>
+
+
+            
+          </div>
+
+          
+        </div>
+
+        <div class="leaflet-map-block">
+          <div class="leaflet-map-title">
+            <span>Regional Map</span>
+            <span>Drone Simulation</span>
+          </div>
+          <div class="leaflet-shell">
+            <div id="war-drone-map"></div>
+          </div>
+        </div>
+      </div> 
+  </section>
+  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const warDroneMap = L.map("war-drone-map", {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([33, 44], 5);
+
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      { attribution: "Tiles © Esri" }
+    ).addTo(warDroneMap);
+
+    function droneIcon(color) {
+      const className = color === "red" ? "drone-red" : "drone-blue";
+
+      return L.divIcon({
+        html: `<div class="${className}"></div>`,
+        iconSize: [12, 12],
+        className: ""
+      });
+    }
+
+    function explosionIcon() {
+      let sparks = "";
+
+      for (let i = 0; i < 10; i += 1) {
+        const x = (Math.random() - 0.5) * 120 + "px";
+        const y = (Math.random() - 0.5) * 120 + "px";
+        sparks += `<div class="explosion-spark" style="--x:${x};--y:${y}"></div>`;
+      }
+
+      return L.divIcon({
+        html: `
+          <div style="position:relative">
+            <div class="explosion-core"></div>
+            <div class="explosion-ring"></div>
+            ${sparks}
+          </div>
+        `,
+        iconSize: [20, 20],
+        className: ""
+      });
+    }
+
+    const iran = [32, 53];
+    const israel = [31.5, 34.8];
+    const iranTargets = [
+      [31.5, 34.8],
+      [33, 44],
+      [35, 38],
+      [39, 35],
+      [41, 47],
+      [37, 60],
+      [34, 66],
+      [29, 69],
+      [26, 50],
+      [24, 45]
+    ];
+
+    class Drone {
+      constructor(start, target, color) {
+        this.lat = start[0];
+        this.lng = start[1];
+        this.targetLat = target[0];
+        this.targetLng = target[1];
+        this.marker = L.marker([this.lat, this.lng], {
+          icon: droneIcon(color)
+        }).addTo(warDroneMap);
+      }
+
+      explode() {
+        const pos = [this.lat, this.lng];
+        warDroneMap.removeLayer(this.marker);
+        const boom = L.marker(pos, { icon: explosionIcon() }).addTo(warDroneMap);
+        setTimeout(() => warDroneMap.removeLayer(boom), 1000);
+      }
+
+      move() {
+        const dx = this.targetLat - this.lat;
+        const dy = this.targetLng - this.lng;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 0.1) {
+          this.explode();
+          return false;
+        }
+
+        const speed = 0.01;
+        const driftLat = (Math.random() - 0.5) * 0.002;
+        const driftLng = (Math.random() - 0.5) * 0.002;
+
+        this.lat += (dx / dist) * speed + driftLat;
+        this.lng += (dy / dist) * speed + driftLng;
+        this.marker.setLatLng([this.lat, this.lng]);
+
+        return true;
+      }
+    }
+
+    let drones = [];
+
+    function randomIranTarget() {
+      const t = iranTargets[Math.floor(Math.random() * iranTargets.length)];
+      return [t[0] + (Math.random() - 0.5) * 1.5, t[1] + (Math.random() - 0.5) * 1.5];
+    }
+
+    function spawnIranDrone() {
+      const start = [iran[0] + (Math.random() - 0.5), iran[1] + (Math.random() - 0.5)];
+      const target = randomIranTarget();
+      drones.push(new Drone(start, target, "red"));
+    }
+
+    function spawnIsraelDrone() {
+      const start = [israel[0] + (Math.random() - 0.5), israel[1] + (Math.random() - 0.5)];
+      const target = [iran[0] + (Math.random() - 0.5) * 2, iran[1] + (Math.random() - 0.5) * 2];
+      drones.push(new Drone(start, target, "blue"));
+    }
+
+    function spawnWave() {
+      const iranCount = 6 + Math.floor(Math.random() * 6);
+      const israelCount = 4 + Math.floor(Math.random() * 5);
+
+      for (let i = 0; i < iranCount; i += 1) {
+        if (drones.length < 60) {
+          setTimeout(spawnIranDrone, i * 200);
+        }
+      }
+
+      for (let i = 0; i < israelCount; i += 1) {
+        if (drones.length < 60) {
+          setTimeout(spawnIsraelDrone, i * 250);
+        }
+      }
+    }
+
+    function launchWave() {
+      spawnWave();
+      const next = 5000 + Math.random() * 5000;
+      setTimeout(launchWave, next);
+    }
+
+    function updateDrones() {
+      drones = drones.filter((drone) => drone.move());
+      requestAnimationFrame(updateDrones);
+    }
+
+    function label(name, lat, lng) {
+      L.marker([lat, lng], {
+        icon: L.divIcon({
+          className: "country",
+          html: name
+        })
+      }).addTo(warDroneMap);
+    }
+
+    label("IRAN", 32, 53);
+    label("ISRAEL", 31.5, 34.8);
+    label("IRAQ", 33, 44);
+    label("SYRIA", 35, 38);
+    label("TURKEY", 39, 35);
+    label("SAUDI ARABIA", 24, 45);
+
+    launchWave();
+    updateDrones();
+  </script>
+</body>
+</html>

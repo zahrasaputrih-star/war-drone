@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="500" height="300">
+  <defs>
+    <linearGradient id="seaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10283a"/>
+      <stop offset="45%" stop-color="#16364a"/>
+      <stop offset="100%" stop-color="#0a1b2b"/>
+    </linearGradient>
+    <linearGradient id="landGradient" x1="12%" y1="8%" x2="92%" y2="88%">
+      <stop offset="0%" stop-color="#8b8e61"/>
+      <stop offset="28%" stop-color="#6f7a4d"/>
+      <stop offset="54%" stop-color="#766244"/>
+      <stop offset="78%" stop-color="#836d4b"/>
+      <stop offset="100%" stop-color="#6d7a52"/>
+    </linearGradient>
+    <radialGradient id="desertGlow" cx="58%" cy="58%" r="48%">
+      <stop offset="0%" stop-color="#d9bf82" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#d9bf82" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignetteGradient" cx="50%" cy="50%" r="74%">
+      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.42"/>
+    </radialGradient>
+    <filter id="terrainTexture" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="7" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.08"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="noise" mode="multiply"/>
+    </filter>
+    <filter id="soften" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.8"/>
+    </filter>
+  </defs>
+
+  <rect width="500" height="300" fill="url(#seaGradient)"/>
+
+  <g stroke="rgba(29,242,211,0.14)" stroke-width="1" opacity="0.55">
+    <line x1="0" y1="50" x2="500" y2="50"/>
+    <line x1="0" y1="100" x2="500" y2="100"/>
+    <line x1="0" y1="150" x2="500" y2="150"/>
+    <line x1="0" y1="200" x2="500" y2="200"/>
+    <line x1="0" y1="250" x2="500" y2="250"/>
+    <line x1="80" y1="0" x2="80" y2="300"/>
+    <line x1="160" y1="0" x2="160" y2="300"/>
+    <line x1="240" y1="0" x2="240" y2="300"/>
+    <line x1="320" y1="0" x2="320" y2="300"/>
+    <line x1="400" y1="0" x2="400" y2="300"/>
+    <line x1="480" y1="0" x2="480" y2="300"/>
+  </g>
+
+  <ellipse cx="360" cy="214" rx="64" ry="28" fill="url(#desertGlow)" opacity="0.48"/>
+  <ellipse cx="230" cy="198" rx="118" ry="58" fill="url(#desertGlow)" opacity="0.34"/>
+
+  <path d="M73 44 L102 38 L146 42 L183 37 L229 35 L266 40 L313 33 L363 38 L404 55 L431 85 L446 126 L450 170 L442 204 L421 231 L401 251 L372 266 L330 274 L283 273 L242 262 L206 250 L176 251 L145 259 L117 257 L96 244 L80 223 L69 195 L65 164 L68 132 L79 105 L95 82 L94 63 Z"
+    fill="url(#landGradient)" stroke="rgba(218,240,228,0.56)" stroke-width="1.3" filter="url(#terrainTexture)"/>
+  <path d="M73 44 L102 38 L146 42 L183 37 L229 35 L266 40 L313 33 L363 38 L404 55 L431 85 L446 126"
+    fill="none" stroke="rgba(130,205,196,0.34)" stroke-width="3" filter="url(#soften)"/>
+  <path d="M132 64 C176 47, 214 48, 260 51 C315 55, 364 73, 391 104 C409 125, 414 156, 409 182 C400 220, 365 248, 312 258 C269 265, 218 251, 180 234 C142 217, 113 190, 106 155 C101 122, 104 85, 132 64 Z"
+    fill="rgba(201,177,118,0.2)"/>
+  <path d="M183 118 C208 110, 243 111, 280 118 C323 127, 355 143, 372 167 C389 191, 389 219, 367 239 C340 264, 299 269, 261 264 C223 259, 191 244, 170 222 C149 200, 145 171, 157 147 C164 133, 170 124, 183 118 Z"
+    fill="rgba(48,72,45,0.28)"/>
+  <g fill="none" stroke="rgba(217,198,146,0.22)" stroke-width="2.2" stroke-linecap="round" filter="url(#soften)">
+    <path d="M152 98 C194 86, 239 84, 284 94 C324 103, 359 121, 381 146"/>
+    <path d="M170 142 C205 133, 250 135, 291 146 C324 155, 353 174, 374 197"/>
+    <path d="M191 197 C224 192, 258 196, 292 209 C319 220, 343 234, 360 249"/>
+  </g>
+
+  <g fill="none" stroke="rgba(143,208,255,0.28)" stroke-width="1.2">
+    <path d="M82 46 C81 69, 77 92, 73 116 C70 143, 71 170, 79 196 C89 224, 103 248, 118 274"/>
+    <path d="M325 241 C342 231, 352 226, 363 224 C381 219, 395 222, 412 229"/>
+  </g>
+
+  <g fill="rgba(0,0,0,0.04)" stroke="rgba(223,236,226,0.34)" stroke-width="0.75">
+    <path d="M64 169 L91 151 L105 170 L108 207 L96 236 L75 233 L64 203 Z"/>
+    <path d="M108 114 L113 111 L116 118 L115 126 L109 128 L106 122 Z" fill="rgba(29,242,211,0.08)" stroke="rgba(29,242,211,0.92)"/>
+    <path d="M104 104 L109 100 L116 104 L115 113 L108 115 L103 111 Z"/>
+    <path d="M116 117 L135 116 L147 130 L146 148 L125 159 L113 145 Z"/>
+    <path d="M118 91 L134 88 L151 93 L170 110 L168 124 L150 129 L135 118 L122 106 Z"/>
+    <path d="M150 95 L195 84 L252 87 L286 98 L307 121 L304 162 L278 181 L250 182 L219 170 L190 156 L166 126 Z" fill="rgba(214,190,132,0.05)"/>
+    <path d="M164 156 L220 171 L257 184 L289 201 L285 242 L247 259 L193 252 L164 217 L150 184 Z" fill="rgba(214,190,132,0.05)"/>
+    <path d="M303 145 L322 146 L328 157 L321 169 L304 167 L300 154 Z"/>
+    <path d="M288 99 L324 91 L364 93 L401 110 L425 139 L433 169 L425 197 L409 222 L384 241 L347 247 L312 233 L291 202 L299 164 Z" fill="rgba(29,242,211,0.08)" stroke="rgba(29,242,211,0.92)"/>
+    <path d="M248 58 L302 48 L352 53 L338 79 L289 84 L248 82 Z"/>
+    <path d="M340 71 L359 65 L378 71 L374 88 L355 92 L340 81 Z"/>
+    <path d="M379 69 L399 64 L416 74 L409 92 L392 97 L376 87 Z"/>
+    <path d="M314 223 L329 225 L338 236 L336 248 L321 251 L312 239 Z"/>
+    <path d="M337 227 L357 226 L364 239 L357 254 L339 254 Z"/>
+    <path d="M356 236 L388 239 L400 250 L398 270 L369 276 L352 258 Z"/>
+    <path d="M404 236 L431 236 L446 250 L445 274 L422 282 L398 269 L401 250 Z"/>
+  </g>
+
+  <g fill="none" stroke="rgba(232,245,239,0.7)" stroke-width="1">
+    <path d="M105 101 L107 128"/>
+    <path d="M116 117 L123 145"/>
+    <path d="M122 103 L149 128"/>
+    <path d="M164 126 L170 156"/>
+    <path d="M150 184 L257 184"/>
+    <path d="M286 98 L299 164"/>
+    <path d="M304 145 L322 146"/>
+    <path d="M338 79 L340 91"/>
+    <path d="M376 87 L392 97"/>
+    <path d="M338 236 L357 236"/>
+    <path d="M400 250 L401 268"/>
+  </g>
+  <g fill="none" stroke="rgba(29,242,211,0.95)" stroke-width="1.2">
+    <path d="M108 112 L112 126"/>
+    <path d="M301 166 L311 233"/>
+  </g>
+
+  <g fill="#ffffff" font-family="Arial, sans-serif" font-size="8" letter-spacing="0.08em">
+    <text x="61" y="198">EGYPT</text>
+    <text x="95" y="99">LEBANON</text>
+    <text x="102" y="136">ISRAEL</text>
+    <text x="121" y="143">JORDAN</text>
+    <text x="121" y="90">SYRIA</text>
+    <text x="213" y="124">IRAQ</text>
+    <text x="192" y="214">SAUDI ARABIA</text>
+    <text x="322" y="174">IRAN</text>
+    <text x="274" y="53">TURKEY</text>
+    <text x="339" y="63">ARMENIA</text>
+    <text x="375" y="61">AZERBAIJAN</text>
+    <text x="298" y="142">KUWAIT</text>
+    <text x="307" y="220">QATAR</text>
+    <text x="337" y="220">UAE</text>
+    <text x="354" y="233">OMAN</text>
+  </g>
+
+  <g fill="rgba(174,227,255,0.55)" font-family="Arial, sans-serif" font-size="6" letter-spacing="0.18em">
+    <text x="28" y="38">SATELLITE FEED</text>
+  </g>
+  <g fill="rgba(133,206,255,0.78)" font-family="Arial, sans-serif" font-size="7" letter-spacing="0.12em">
+    <text x="42" y="132" transform="rotate(-82 42 132)">MEDITERRANEAN SEA</text>
+    <text x="338" y="285">PERSIAN GULF</text>
+  </g>
+
+  <rect width="500" height="300" fill="url(#vignetteGradient)"/>
+</svg>

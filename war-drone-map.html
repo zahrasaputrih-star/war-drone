@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Iran Israel Drone War Simulation</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+
+body{
+margin:0;
+background:#0b0f1a;
+font-family:Arial;
+}
+
+#map{
+height:100vh;
+width:100%;
+}
+
+/* IRAN DRONE */
+
+.drone-red{
+width:12px;
+height:12px;
+background:red;
+border-radius:50%;
+box-shadow:0 0 12px red;
+animation:blink 0.35s infinite;
+}
+
+/* ISRAEL DRONE */
+
+.drone-blue{
+width:12px;
+height:12px;
+background:#00aaff;
+border-radius:50%;
+box-shadow:0 0 12px #00aaff;
+animation:blink 0.35s infinite;
+}
+
+@keyframes blink{
+0%{opacity:1; transform:scale(1);}
+50%{opacity:0.7; transform:scale(0.85);}
+100%{opacity:1; transform:scale(1);}
+}
+
+/* BIG EXPLOSION */
+
+.explosion-core{
+width:16px;
+height:16px;
+background:yellow;
+border-radius:50%;
+box-shadow:0 0 30px orange,0 0 60px red;
+animation:explodeCore 0.8s forwards;
+}
+
+.explosion-ring{
+position:absolute;
+width:10px;
+height:10px;
+border:3px solid orange;
+border-radius:50%;
+animation:explodeRing 1s forwards;
+}
+
+.explosion-spark{
+position:absolute;
+width:4px;
+height:4px;
+background:orange;
+border-radius:50%;
+animation:spark 1s forwards;
+}
+
+@keyframes explodeCore{
+0%{transform:scale(0.4);opacity:1}
+100%{transform:scale(3);opacity:0}
+}
+
+@keyframes explodeRing{
+0%{transform:scale(0.2);opacity:1}
+100%{transform:scale(7);opacity:0}
+}
+
+@keyframes spark{
+0%{transform:translate(0,0);opacity:1}
+100%{transform:translate(var(--x),var(--y));opacity:0}
+}
+
+.country{
+color:white;
+font-size:13px;
+font-weight:bold;
+text-shadow:0 0 6px black;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+/* MAP */
+
+const map = L.map('map').setView([33,44],5)
+
+L.tileLayer(
+'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+{ attribution:'Tiles © Esri'}
+).addTo(map)
+
+
+/* DRONE ICON */
+
+function droneIcon(color){
+
+let className=color==="red"?"drone-red":"drone-blue"
+
+return L.divIcon({
+html:`<div class="${className}"></div>`,
+iconSize:[12,12],
+className:''
+})
+
+}
+
+
+/* EXPLOSION ICON */
+
+function explosionIcon(){
+
+let sparks=""
+
+for(let i=0;i<10;i++){
+
+let x=(Math.random()-0.5)*120+"px"
+let y=(Math.random()-0.5)*120+"px"
+
+sparks+=`<div class="explosion-spark" style="--x:${x};--y:${y}"></div>`
+}
+
+return L.divIcon({
+html:`
+<div style="position:relative">
+<div class="explosion-core"></div>
+<div class="explosion-ring"></div>
+${sparks}
+</div>
+`,
+iconSize:[20,20],
+className:''
+})
+
+}
+
+
+/* LOCATIONS */
+
+const iran=[32,53]
+const israel=[31.5,34.8]
+
+const iranTargets=[
+
+[31.5,34.8],
+[33,44],
+[35,38],
+[39,35],
+[41,47],
+[37,60],
+[34,66],
+[29,69],
+[26,50],
+[24,45]
+
+]
+
+
+/* DRONE CLASS */
+
+class Drone{
+
+constructor(start,target,color){
+
+this.lat=start[0]
+this.lng=start[1]
+
+this.targetLat=target[0]
+this.targetLng=target[1]
+
+this.marker=L.marker([this.lat,this.lng],{
+icon:droneIcon(color)
+}).addTo(map)
+
+}
+
+explode(){
+
+const pos=[this.lat,this.lng]
+
+map.removeLayer(this.marker)
+
+const boom=L.marker(pos,{icon:explosionIcon()}).addTo(map)
+
+setTimeout(()=>map.removeLayer(boom),1000)
+
+}
+
+move(){
+
+let dx=this.targetLat-this.lat
+let dy=this.targetLng-this.lng
+
+let dist=Math.sqrt(dx*dx+dy*dy)
+
+if(dist<0.1){
+
+this.explode()
+return false
+
+}
+
+let speed=0.01
+
+let driftLat=(Math.random()-0.5)*0.002
+let driftLng=(Math.random()-0.5)*0.002
+
+this.lat+=(dx/dist)*speed + driftLat
+this.lng+=(dy/dist)*speed + driftLng
+
+this.marker.setLatLng([this.lat,this.lng])
+
+return true
+
+}
+
+}
+
+
+/* STORAGE */
+
+let drones=[]
+
+
+/* RANDOM TARGET */
+
+function randomIranTarget(){
+
+let t=iranTargets[Math.floor(Math.random()*iranTargets.length)]
+
+return [
+
+t[0]+(Math.random()-0.5)*1.5,
+t[1]+(Math.random()-0.5)*1.5
+
+]
+
+}
+
+
+/* SPAWN IRAN DRONE */
+
+function spawnIranDrone(){
+
+let start=[
+iran[0]+(Math.random()-0.5),
+iran[1]+(Math.random()-0.5)
+]
+
+let target=randomIranTarget()
+
+drones.push(new Drone(start,target,"red"))
+
+}
+
+
+/* SPAWN ISRAEL DRONE */
+
+function spawnIsraelDrone(){
+
+let start=[
+israel[0]+(Math.random()-0.5),
+israel[1]+(Math.random()-0.5)
+]
+
+let target=[
+iran[0]+(Math.random()-0.5)*2,
+iran[1]+(Math.random()-0.5)*2
+]
+
+drones.push(new Drone(start,target,"blue"))
+
+}
+
+
+/* SWARM ATTACK */
+
+function spawnWave(){
+
+let iranCount=6+Math.floor(Math.random()*6)
+let israelCount=4+Math.floor(Math.random()*5)
+
+for(let i=0;i<iranCount;i++){
+
+if(drones.length<60){
+setTimeout(spawnIranDrone,i*200)
+}
+
+}
+
+for(let i=0;i<israelCount;i++){
+
+if(drones.length<60){
+setTimeout(spawnIsraelDrone,i*250)
+}
+
+}
+
+}
+
+
+/* RANDOM WAVE TIMER */
+
+function launchWave(){
+
+spawnWave()
+
+let next=5000+Math.random()*5000
+
+setTimeout(launchWave,next)
+
+}
+
+launchWave()
+
+
+/* UPDATE LOOP */
+
+function update(){
+
+drones=drones.filter(d=>d.move())
+
+requestAnimationFrame(update)
+
+}
+
+update()
+
+
+/* LABELS */
+
+function label(name,lat,lng){
+
+L.marker([lat,lng],{
+icon:L.divIcon({
+className:'country',
+html:name
+})
+}).addTo(map)
+
+}
+
+label("IRAN",32,53)
+label("ISRAEL",31.5,34.8)
+label("IRAQ",33,44)
+label("SYRIA",35,38)
+label("TURKEY",39,35)
+label("SAUDI ARABIA",24,45)
+
+</script>
+
+</body>
+</html>

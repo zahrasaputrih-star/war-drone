@@ -1,0 +1,239 @@
+@font-face {
+  font-family: "Tomorrow";
+  src: url("assets/Tomorrow-Regular.f73b893ce0687684ef1d293.19c63e19ae4dabeefaf62961ace83cfb.ttf");
+}
+
+:root {
+  --mint: #35f5d0;
+  --mint-soft: rgba(53, 245, 208, 0.28);
+  --red: #ff3131;
+  --bg: #020505;
+  --panel: rgba(4, 7, 9, 0.78);
+  --text: #eafef8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(53, 245, 208, 0.08), transparent 18%),
+    #010303;
+  color: var(--text);
+  font-family: "Tomorrow", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.poster {
+  position: relative;
+  width: min(100vw, 860px);
+  aspect-ratio: 2560 / 6000;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.7);
+}
+
+.poster-bg,
+.poster-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.poster-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.poster-overlay {
+  background:
+    linear-gradient(180deg, rgba(1, 4, 5, 0.12) 0%, rgba(1, 4, 5, 0.14) 100%);
+  pointer-events: none;
+}
+
+.top-nav,
+.hero-block,
+.content-column,
+.footer-zone {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.top-nav {
+  top: 2.25%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 4%;
+}
+
+.top-nav a {
+  font-size: clamp(0.45rem, 0.9vw, 0.9rem);
+  letter-spacing: 0.08em;
+  color: #f4f6f6;
+}
+
+.hero-block {
+  top: 18.2%;
+  padding: 0 8%;
+}
+
+.welcome-tag {
+  width: 71%;
+  margin: 0 0 4% 10%;
+  padding: 1.4% 3%;
+  border: 0.18vw solid var(--mint);
+  background: rgba(5, 8, 10, 0.7);
+  text-align: center;
+  font-size: clamp(0.75rem, 1.45vw, 1.4rem);
+  box-shadow: 0 0 18px rgba(53, 245, 208, 0.16);
+}
+
+.title-row {
+  width: 88%;
+  padding: 1.6% 2.2%;
+  border: 0.18vw solid rgba(255, 49, 49, 0.9);
+  background: linear-gradient(90deg, rgba(18, 20, 20, 0.88), rgba(8, 10, 10, 0.7));
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 2%;
+  align-items: center;
+}
+
+.title-row h1 {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 2.25rem);
+  color: #f7f2ef;
+  font-weight: 400;
+}
+
+.title-row p {
+  margin: 0;
+  font-size: clamp(0.5rem, 1vw, 1rem);
+  color: #d7e3de;
+}
+
+.content-column {
+  top: 31%;
+  padding: 0 18% 0 36%;
+  display: grid;
+  gap: 2.2%;
+}
+
+.panel {
+  background: var(--panel);
+  border: 0.18vw solid rgba(255, 255, 255, 0.75);
+  padding: 4% 5%;
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(0, 0, 0, 0.3);
+}
+
+.panel p {
+  margin: 0 0 4%;
+  font-size: clamp(0.55rem, 1vw, 1rem);
+  line-height: 1.08;
+}
+
+.panel p:last-child {
+  margin-bottom: 0;
+}
+
+.panel-red {
+  border-top: 0.22vw solid var(--red);
+}
+
+.panel-slant {
+  transform: skewX(-11deg);
+  padding: 5.5% 6%;
+}
+
+.panel-slant > * {
+  transform: skewX(11deg);
+}
+
+.panel h2 {
+  margin: 0 0 5%;
+  font-size: clamp(0.95rem, 2vw, 1.8rem);
+  color: #f0f0f0;
+  font-weight: 400;
+}
+
+.panel-buy {
+  transform: skewX(-12deg);
+  border-color: rgba(193, 159, 255, 0.9);
+  padding: 5.5% 6%;
+}
+
+.panel-buy > * {
+  transform: skewX(12deg);
+}
+
+.buy-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4%;
+  align-items: start;
+  margin-bottom: 4%;
+  font-size: clamp(0.55rem, 1vw, 1rem);
+}
+
+.buy-step strong {
+  color: var(--mint);
+  font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+  font-weight: 400;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 4%;
+  padding: 2.8% 5.5%;
+  border: 0.18vw solid var(--mint);
+  background: rgba(2, 5, 5, 0.82);
+  font-size: clamp(0.6rem, 1.1vw, 1rem);
+  box-shadow: 0 0 18px rgba(53, 245, 208, 0.14);
+  font-weight: 400;
+}
+
+.footer-zone {
+  bottom: 8.8%;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-card {
+  padding: 1.2% 5%;
+  border-top: 0.16vw solid var(--mint);
+  color: #f3f3f3;
+  font-size: clamp(0.7rem, 1.1vw, 1.05rem);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+@media (max-width: 720px) {
+  .poster {
+    width: 100vw;
+  }
+
+  .content-column {
+    padding: 0 16% 0 35%;
+  }
+}
