@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>War Drone Token Info</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <style>
+    @font-face {
+      font-family: "Tomorrow";
+      src: url("assets/Tomorrow-Regular.f73b893ce0687684ef1d293.19c63e19ae4dabeefaf62961ace83cfb.ttf");
+    }
+    :root {
+      --bg: #05080c;
+      --panel: rgba(10, 15, 20, 0.9);
+      --line: rgba(146, 252, 207, 0.34);
+      --text: #eef8f3;
+      --muted: #a8b8b1;
+      --accent: #92fccf;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Tomorrow", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(146, 252, 207, 0.08), transparent 22%),
+        linear-gradient(180deg, #020406 0%, #060a10 100%);
+    }
+    a { color: inherit; text-decoration: none; }
+    .page { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 64px; }
+    .topbar, .panel { border: 1px solid var(--line); background: var(--panel); }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      margin-bottom: 28px; padding: 16px 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; text-transform: uppercase; letter-spacing: .08em; }
+    .brand img { width: 42px; height: 42px; }
+    .topbar nav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+    .hero, .grid-card { border: 1px solid var(--line); background: var(--panel); }
+    .hero { padding: 28px; margin-bottom: 24px; }
+    .eyebrow { display: inline-block; margin-bottom: 14px; color: var(--accent); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2, h3 { margin: 0; font-weight: 400; }
+    h1 { font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 18px; }
+    p, li { color: var(--muted); line-height: 1.75; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-card { padding: 22px; }
+    .grid-card h2 { margin-bottom: 12px; color: var(--accent); font-size: 24px; }
+    ul { margin: 12px 0 0; padding-left: 22px; }
+    .token-boxes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 22px; }
+    .token-box { padding: 14px; border: 1px solid rgba(146,252,207,.22); background: rgba(255,255,255,.02); }
+    .token-box strong { display: block; margin-bottom: 8px; font-size: 12px; color: #fff; letter-spacing: .08em; text-transform: uppercase; }
+    .token-box span { color: var(--accent); font-size: 14px; }
+    @media (max-width: 880px) {
+      .grid, .token-boxes { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/favicon.png" alt="War Drone logo">
+        <div>
+          <div>War Drone</div>
+          <div style="color: var(--muted); font-size: 12px;">Token Info</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Landing</a>
+        <a href="whitepaper.html">Whitepaper</a>
+        <a href="utility.html">Utility</a>
+        <a href="spotlight.html">Spotlight</a>
+        <a href="join-now.html">Join Now</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <span class="eyebrow">Solana Asset Profile</span>
+      <h1>War Drone Token Information</h1>
+      <p>
+        War Drone is positioned as the native digital asset that anchors the project narrative, product identity,
+        and future command-center ecosystem. The token is designed to sit at the center of the War Drone experience
+        across the landing page, tactical app surface, campaign events, and future gated modules.
+      </p>
+      <div class="token-boxes">
+        <div class="token-box"><strong>Chain</strong><span>Solana</span></div>
+        <div class="token-box"><strong>Ticker</strong><span>$DRONE / $WARDRONE</span></div>
+        <div class="token-box"><strong>Theme</strong><span>Autonomous Strike Systems</span></div>
+        <div class="token-box"><strong>Role</strong><span>Ecosystem Access Asset</span></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="grid-card">
+        <h2>Mission of the Token</h2>
+        <p>
+          The token gives War Drone a persistent on-chain identity and unifies the project’s visuals, app modules,
+          and community direction under one asset. It is intended to support access, engagement, and campaign-based
+          interaction as the product expands.
+        </p>
+      </article>
+      <article class="grid-card">
+        <h2>Positioning</h2>
+        <ul>
+          <li>Built for a high-intensity military-tech narrative.</li>
+          <li>Designed to fit a tactical dashboard ecosystem.</li>
+          <li>Aligned with command-center visuals, map interfaces, and operator access concepts.</li>
+        </ul>
+      </article>
+      <article class="grid-card">
+        <h2>Why Solana</h2>
+        <ul>
+          <li>Fast user interaction for live mission surfaces.</li>
+          <li>Low-cost transactions for community participation.</li>
+          <li>Good fit for rapid UI-led experiences and token-driven events.</li>
+        </ul>
+      </article>
+      <article class="grid-card">
+        <h2>Current Focus</h2>
+        <p>
+          The current priority is strong brand deployment: landing page, tactical whitepaper, visual map systems,
+          and a War Drone app destination that can later absorb token telemetry and operator features.
+        </p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

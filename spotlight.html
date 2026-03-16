@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>War Drone Spotlight</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <style>
+    @font-face { font-family: "Tomorrow"; src: url("assets/Tomorrow-Regular.f73b893ce0687684ef1d293.19c63e19ae4dabeefaf62961ace83cfb.ttf"); }
+    :root { --panel:rgba(10,15,20,.9); --line:rgba(146,252,207,.34); --text:#eef8f3; --muted:#a8b8b1; --accent:#92fccf; --accent2:#ff5c4d; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Tomorrow",sans-serif; color:var(--text); background:radial-gradient(circle at top, rgba(255,92,77,.08), transparent 18%), linear-gradient(180deg,#020406 0%,#060a10 100%); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1100px, calc(100% - 32px)); margin:0 auto; padding:24px 0 64px; }
+    .topbar, .panel { border:1px solid var(--line); background:var(--panel); }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:28px; padding:16px 18px; }
+    .brand { display:flex; align-items:center; gap:14px; text-transform:uppercase; letter-spacing:.08em; }
+    .brand img { width:42px; height:42px; }
+    .topbar nav { display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--muted); }
+    .hero, .cards article { padding:24px; }
+    .hero { border:1px solid var(--line); background:var(--panel); margin-bottom:24px; }
+    .eyebrow { display:inline-block; margin-bottom:14px; color:var(--accent2); font-size:13px; letter-spacing:.16em; text-transform:uppercase; }
+    h1, h2 { margin:0; font-weight:400; }
+    h1 { font-size:clamp(2rem, 5vw, 4rem); margin-bottom:18px; }
+    h2 { margin-bottom:12px; color:var(--accent); font-size:24px; }
+    p, li { color:var(--muted); line-height:1.75; }
+    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .cards article { border:1px solid var(--line); background:var(--panel); }
+    @media (max-width: 880px) { .cards { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/favicon.png" alt="War Drone logo">
+        <div><div>War Drone</div><div style="color: var(--muted); font-size: 12px;">Spotlight</div></div>
+      </div>
+      <nav>
+        <a href="index.html">Landing</a>
+        <a href="whitepaper.html">Whitepaper</a>
+        <a href="token-info.html">Token Info</a>
+        <a href="utility.html">Utility</a>
+        <a href="join-now.html">Join Now</a>
+      </nav>
+    </header>
+    <section class="hero">
+      <span class="eyebrow">Priority Targets</span>
+      <h1>War Drone Spotlight</h1>
+      <p>Spotlight highlights the strongest parts of the War Drone identity: visual command surfaces, strike simulation, regional map experiences, and mission-first product design.</p>
+    </section>
+    <section class="cards">
+      <article>
+        <h2>Command Aesthetic</h2>
+        <p>War Drone uses a tactical interface language that immediately differentiates it from generic token projects.</p>
+      </article>
+      <article>
+        <h2>Theater Maps</h2>
+        <p>Regional map views create a battlefield narrative that feels active, operational, and memorable.</p>
+      </article>
+      <article>
+        <h2>Drone Simulation</h2>
+        <p>Animated swarm behavior, moving routes, and strike events give the project motion instead of static presentation.</p>
+      </article>
+      <article>
+        <h2>Solana Positioning</h2>
+        <p>The ecosystem can support live interaction and rapid campaign surfaces without slow or expensive UX.</p>
+      </article>
+      <article>
+        <h2>Strong Narrative</h2>
+        <p>Autonomous warfare is a recognisable symbol of modern technology and makes the project identity sharper.</p>
+      </article>
+      <article>
+        <h2>Expansion Path</h2>
+        <p>Landing page, app dashboard, campaign modules, and gated operator tools can all grow under one coherent theme.</p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
