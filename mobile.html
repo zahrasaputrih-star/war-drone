@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>War Drone Mobile</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    @font-face {
+      font-family: "Tomorrow";
+      src: url("assets/Tomorrow-Regular.f73b893ce0687684ef1d293.19c63e19ae4dabeefaf62961ace83cfb.ttf");
+    }
+
+    :root {
+      --bg: #04070b;
+      --panel: rgba(9, 14, 18, 0.9);
+      --line: rgba(146, 252, 207, 0.28);
+      --text: #eef9f4;
+      --muted: #a7b4ae;
+      --accent: #92fccf;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Tomorrow", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(146, 252, 207, 0.08), transparent 22%),
+        linear-gradient(180deg, #020406 0%, #070d14 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      padding: 14px 14px 48px;
+    }
+
+    .topbar,
+    .hero,
+    .section,
+    .map-card,
+    .footer-card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .nav a {
+      padding: 10px 12px;
+      border: 1px solid rgba(146, 252, 207, 0.2);
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hero {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-weight: 400;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      line-height: 0.98;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-actions a {
+      padding: 12px 10px;
+      border: 1px solid var(--line);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .section {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .section ul,
+    .section ol {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid rgba(146, 252, 207, 0.18);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #ffffff;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stat span {
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .map-card {
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .map-header span:last-child {
+      color: var(--accent);
+    }
+
+    #war-drone-map-mobile {
+      width: 100%;
+      height: 320px;
+      background: #07131a;
+    }
+
+    .drone-red {
+      width: 12px;
+      height: 12px;
+      background: red;
+      border-radius: 50%;
+      box-shadow: 0 0 12px red;
+      animation: blink 0.35s infinite;
+    }
+
+    .drone-blue {
+      width: 12px;
+      height: 12px;
+      background: #00aaff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #00aaff;
+      animation: blink 0.35s infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .explosion-core {
+      width: 16px;
+      height: 16px;
+      background: yellow;
+      border-radius: 50%;
+      box-shadow: 0 0 30px orange, 0 0 60px red;
+      animation: explodeCore 0.8s forwards;
+    }
+
+    .explosion-ring {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 3px solid orange;
+      border-radius: 50%;
+      animation: explodeRing 1s forwards;
+    }
+
+    .explosion-spark {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: orange;
+      border-radius: 50%;
+      animation: spark 1s forwards;
+    }
+
+    @keyframes explodeCore {
+      0% { transform: scale(0.4); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+
+    @keyframes explodeRing {
+      0% { transform: scale(0.2); opacity: 1; }
+      100% { transform: scale(7); opacity: 0; }
+    }
+
+    @keyframes spark {
+      0% { transform: translate(0, 0); opacity: 1; }
+      100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+    }
+
+    .country {
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      text-shadow: 0 0 6px black;
+      font-family: "Tomorrow", sans-serif;
+    }
+
+    .footer-card {
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/favicon.png" alt="War Drone logo">
+        <div>
+          <div>War Drone</div>
+          <div style="color: var(--muted); font-size: 11px;">Mobile Command Surface</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="whitepaper.html">Whitepaper</a>
+        <a href="token-info.html">Token Info</a>
+        <a href="utility.html">Utility</a>
+        <a href="spotlight.html">Spotlight</a>
+        <a href="join-now.html">Join Now</a>
+        <a href="index.html?desktop=1">Desktop Site</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <span class="eyebrow">welcome to wardrone.</span>
+      <h1>WAR DRONE</h1>
+      <p>
+        WAR DRONE - The Era of Autonomous Strike Systems. War Drone is a Solana-native tactical identity built around
+        autonomous aerial warfare, mission control aesthetics, regional theater mapping, and strike simulation.
+      </p>
+      <div class="hero-actions">
+        <a href="join-now.html">Get Phantom Wallet</a>
+        <a href="app/">Open App</a>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <strong>Network</strong>
+          <span>Solana</span>
+        </div>
+        <div class="stat">
+          <strong>Theme</strong>
+          <span>Autonomous Strike</span>
+        </div>
+        <div class="stat">
+          <strong>Map Mode</strong>
+          <span>Live Theater</span>
+        </div>
+        <div class="stat">
+          <strong>Status</strong>
+          <span>Mission Ready</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Introduction</h2>
+      <p>
+        In modern warfare, unmanned aerial vehicles have transformed the way military operations are conducted.
+        Originally developed for surveillance and reconnaissance, drones have evolved into systems capable of carrying
+        out precision strikes without a pilot on board.
+      </p>
+      <p>
+        War Drone draws inspiration from this transformation. The project turns battlefield technology, swarm logic,
+        and command-center visual design into a token-driven identity and product experience.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What is $WARDRONE</h2>
+      <p>
+        $WARDRONE is a digital asset inspired by the rise of unmanned combat aerial vehicles and the era of autonomous
+        warfare. It represents a tactical, military-tech narrative built on Solana and extended through map interfaces,
+        drone simulation, and mission-based product design.
+      </p>
+      <ul>
+        <li>Strong battlefield-inspired visual identity.</li>
+        <li>Tactical dashboard and mission control design language.</li>
+        <li>Regional map simulation and strike-route storytelling.</li>
+        <li>Future command modules, operator access, and campaign-based utility.</li>
+      </ul>
+    </section>
+
+    <div class="map-card">
+      <div class="map-header">
+        <span>Regional Theater Map</span>
+        <span>Mobile Simulation</span>
+      </div>
+      <div id="war-drone-map-mobile"></div>
+    </div>
+
+    <section class="section">
+      <h2>How To Buy</h2>
+      <ol>
+        <li>Prepare a Solana wallet such as Phantom or Solflare.</li>
+        <li>Fund the wallet with SOL to enable network transactions.</li>
+        <li>Use the verified War Drone token pair or contract details when available.</li>
+        <li>Join the War Drone app and follow mission updates through the ecosystem.</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2>Core Utility</h2>
+      <ul>
+        <li>Command-surface access and future gated modules.</li>
+        <li>Mission events, strike campaigns, and operator participation.</li>
+        <li>Visual telemetry, map layers, and tactical identity across the platform.</li>
+      </ul>
+    </section>
+
+    <section class="footer-card">
+      Copyright ©2024 War Drone. All Rights Reserved.
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const mobileMap = L.map("war-drone-map-mobile", {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([33, 44], 4);
+
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      { attribution: "Tiles © Esri" }
+    ).addTo(mobileMap);
+
+    function droneIcon(color) {
+      const className = color === "red" ? "drone-red" : "drone-blue";
+      return L.divIcon({
+        html: `<div class="${className}"></div>`,
+        iconSize: [12, 12],
+        className: ""
+      });
+    }
+
+    function explosionIcon() {
+      let sparks = "";
+      for (let i = 0; i < 10; i += 1) {
+        const x = (Math.random() - 0.5) * 120 + "px";
+        const y = (Math.random() - 0.5) * 120 + "px";
+        sparks += `<div class="explosion-spark" style="--x:${x};--y:${y}"></div>`;
+      }
+      return L.divIcon({
+        html: `
+          <div style="position:relative">
+            <div class="explosion-core"></div>
+            <div class="explosion-ring"></div>
+            ${sparks}
+          </div>
+        `,
+        iconSize: [20, 20],
+        className: ""
+      });
+    }
+
+    const iran = [32, 53];
+    const israel = [31.5, 34.8];
+    const iranTargets = [
+      [31.5, 34.8],
+      [33, 44],
+      [35, 38],
+      [39, 35],
+      [41, 47],
+      [37, 60],
+      [34, 66],
+      [29, 69],
+      [26, 50],
+      [24, 45]
+    ];
+
+    class Drone {
+      constructor(start, target, color) {
+        this.lat = start[0];
+        this.lng = start[1];
+        this.targetLat = target[0];
+        this.targetLng = target[1];
+        this.marker = L.marker([this.lat, this.lng], {
+          icon: droneIcon(color)
+        }).addTo(mobileMap);
+      }
+
+      explode() {
+        const pos = [this.lat, this.lng];
+        mobileMap.removeLayer(this.marker);
+        const boom = L.marker(pos, { icon: explosionIcon() }).addTo(mobileMap);
+        setTimeout(() => mobileMap.removeLayer(boom), 1000);
+      }
+
+      move() {
+        const dx = this.targetLat - this.lat;
+        const dy = this.targetLng - this.lng;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 0.1) {
+          this.explode();
+          return false;
+        }
+        const speed = 0.01;
+        const driftLat = (Math.random() - 0.5) * 0.002;
+        const driftLng = (Math.random() - 0.5) * 0.002;
+        this.lat += (dx / dist) * speed + driftLat;
+        this.lng += (dy / dist) * speed + driftLng;
+        this.marker.setLatLng([this.lat, this.lng]);
+        return true;
+      }
+    }
+
+    let drones = [];
+
+    function randomIranTarget() {
+      const t = iranTargets[Math.floor(Math.random() * iranTargets.length)];
+      return [t[0] + (Math.random() - 0.5) * 1.5, t[1] + (Math.random() - 0.5) * 1.5];
+    }
+
+    function spawnIranDrone() {
+      const start = [iran[0] + (Math.random() - 0.5), iran[1] + (Math.random() - 0.5)];
+      drones.push(new Drone(start, randomIranTarget(), "red"));
+    }
+
+    function spawnIsraelDrone() {
+      const start = [israel[0] + (Math.random() - 0.5), israel[1] + (Math.random() - 0.5)];
+      const target = [iran[0] + (Math.random() - 0.5) * 2, iran[1] + (Math.random() - 0.5) * 2];
+      drones.push(new Drone(start, target, "blue"));
+    }
+
+    function spawnWave() {
+      const iranCount = 4 + Math.floor(Math.random() * 4);
+      const israelCount = 3 + Math.floor(Math.random() * 3);
+
+      for (let i = 0; i < iranCount; i += 1) {
+        if (drones.length < 40) {
+          setTimeout(spawnIranDrone, i * 220);
+        }
+      }
+
+      for (let i = 0; i < israelCount; i += 1) {
+        if (drones.length < 40) {
+          setTimeout(spawnIsraelDrone, i * 260);
+        }
+      }
+    }
+
+    function launchWave() {
+      spawnWave();
+      const next = 5000 + Math.random() * 5000;
+      setTimeout(launchWave, next);
+    }
+
+    function updateDrones() {
+      drones = drones.filter((drone) => drone.move());
+      requestAnimationFrame(updateDrones);
+    }
+
+    function label(name, lat, lng) {
+      L.marker([lat, lng], {
+        icon: L.divIcon({
+          className: "country",
+          html: name
+        })
+      }).addTo(mobileMap);
+    }
+
+    label("IRAN", 32, 53);
+    label("ISRAEL", 31.5, 34.8);
+    label("IRAQ", 33, 44);
+    label("SYRIA", 35, 38);
+    label("TURKEY", 39, 35);
+    label("SAUDI ARABIA", 24, 45);
+
+    launchWave();
+    updateDrones();
+  </script>
+</body>
+</html>

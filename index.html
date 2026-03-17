@@ -6,6 +6,11 @@
   <title>War Drone</title>
   <link rel="icon" type="image/png" href="assets/favicon-2.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script>
+    if (window.matchMedia("(max-width: 820px)").matches && !window.location.search.includes("desktop=1")) {
+      window.location.replace("mobile.html");
+    }
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     @font-face {
